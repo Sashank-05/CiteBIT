@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from './components/Navbar';
-import JsonNavigator from './components/JsonNavigator';
+import JsonNavigator from './components/JsonNavigator/JsonNavigator';
 
 const App = () => {
   return (

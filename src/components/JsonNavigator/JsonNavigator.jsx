@@ -1,89 +1,7 @@
 import React, { useState } from 'react';
-
-const jsonData = {
-  Branches: {
-    "Computer Science Engineering": {
-      Semesters: {
-        1: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-        2: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-      },
-    },
-    "CSE (DS)": {
-      Semesters: {
-        1: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-        2: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-      },
-    },
-    "Information Science Engineering": {
-      Semesters: {
-        1: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-        2: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-      },
-    },
-    "AI&ML": {
-      Semesters: {
-        1: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-        2: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-      },
-    },
-    "Mechanical Engineering": {
-      Semesters: {
-        1: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-        2: {
-          "Module Wise Notes": ["Module 1", "Module 2", "Module 3", "Module 4"],
-          "Books": ["Book 1", "Book 2", "Book 3"],
-          "Previous Year Papers": ["2019", "2020", "2021"],
-          "Syllabus": ["Syllabus"],
-        },
-      },
-    },
-  },
-};
+import { jsonData } from '../../data/data';
+import BranchSelector from './BranchSelector';
+import SemesterSelector from './SemesterSelector';
 
 const JsonNavigator = () => {
   const [currentData, setCurrentData] = useState(jsonData.Branches);
@@ -91,6 +9,7 @@ const JsonNavigator = () => {
   const [selectedBranch, setSelectedBranch] = useState('');
   const [selectedSemester, setSelectedSemester] = useState('');
 
+  // Navigate back in the path
   const handleBack = () => {
     if (path.length > 1) {
       let newPath = path.slice(0, path.length - 1);
@@ -102,6 +21,7 @@ const JsonNavigator = () => {
     }
   };
 
+  // Navigate to a new path
   const navigateTo = (newPath) => {
     let data = jsonData;
     newPath.forEach((key) => {
@@ -110,10 +30,12 @@ const JsonNavigator = () => {
     setCurrentData(data);
   };
 
+  // Check if the data is a leaf node
   const isLeafNode = (data) => {
     return typeof data !== 'object' || Array.isArray(data);
   };
 
+  // Handle form submission
   const handleSubmit = () => {
     if (selectedBranch && selectedSemester) {
       const newPath = ['Branches', selectedBranch, 'Semesters', selectedSemester];
@@ -122,6 +44,7 @@ const JsonNavigator = () => {
     }
   };
 
+  // Render the content based on the current path
   const renderContent = () => {
     if (path.length === 1) {
       return (
@@ -220,38 +143,17 @@ const JsonNavigator = () => {
     <div className={`bg-gray-800 p-6 rounded-2xl shadow-lg ${path.length < 4 ? 'w-1/2 h-3/4 flex flex-col' : 'w-full h-full flex flex-col'}`}>
       <div className="flex flex-col mb-4 gap-4 w-full">
         <div className="flex gap-4">
-          <div className="flex-none">
-            <label className="block text-gray-300 mb-2">Branch</label>
-            <select
-              value={selectedBranch}
-              onChange={(e) => setSelectedBranch(e.target.value)}
-              className="bg-gray-700 text-white py-1 px-2 rounded shadow hover:bg-gray-600 transition"
-            >
-              <option value="" disabled>Select Branch</option>
-              {Object.keys(jsonData.Branches).map((branch) => (
-                <option key={branch} value={branch}>
-                  {branch}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex-none">
-            <label className="block text-gray-300 mb-2">Semester</label>
-            <select
-              value={selectedSemester}
-              onChange={(e) => setSelectedSemester(e.target.value)}
-              className="bg-gray-700 text-white py-1 px-2 rounded shadow hover:bg-gray-600 transition"
-              disabled={!selectedBranch}
-            >
-              <option value="" disabled>Select Semester</option>
-              {selectedBranch &&
-                Object.keys(jsonData.Branches[selectedBranch].Semesters).map((semester) => (
-                  <option key={semester} value={semester}>
-                    {semester}
-                  </option>
-                ))}
-            </select>
-          </div>
+          <BranchSelector
+            selectedBranch={selectedBranch}
+            setSelectedBranch={setSelectedBranch}
+            branches={Object.keys(jsonData.Branches)}
+          />
+          <SemesterSelector
+            selectedSemester={selectedSemester}
+            setSelectedSemester={setSelectedSemester}
+            semesters={selectedBranch ? Object.keys(jsonData.Branches[selectedBranch].Semesters) : []}
+            disabled={!selectedBranch}
+          />
           <div className="flex-none flex items-end">
             <button
               onClick={handleSubmit}
