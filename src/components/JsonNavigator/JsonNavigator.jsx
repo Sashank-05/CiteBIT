@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { jsonData } from '../../data/data';
 import BranchSelector from './BranchSelector';
 import SemesterSelector from './SemesterSelector';
+import { useMediaQuery } from 'react-responsive'
 
 const JsonNavigator = () => {
   const [currentData, setCurrentData] = useState(jsonData.Branches);
@@ -46,6 +47,15 @@ const JsonNavigator = () => {
 
   // Render the content based on the current path
   const renderContent = () => {
+    <link rel="style" href="stylesheet_module.css"></link>
+    const isDesktopOrLaptop = useMediaQuery({
+      query: '(min-width: 1224px)'
+    })
+    const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
+    const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' })
+
     if (path.length === 1) {
       return (
         <div className="overflow-y-auto overflow-x-hidden flex-grow p-4 hide-scrollbar">
@@ -139,28 +149,33 @@ const JsonNavigator = () => {
     }
   };
 
+
   return (
-    <div className={`bg-gray-800 p-6 rounded-2xl shadow-lg ${path.length < 4 ? 'w-1/2 h-3/4 flex flex-col' : 'w-full h-full flex flex-col'}`}>
+    <div className={`bg-gray-800 p-6 rounded-2xl shadow-lg ${path.length < 4 ? 'w-full h-full flex flex-col' : 'w-full h-full flex flex-col'}`}>
       <div className="flex flex-col mb-4 gap-4 w-full">
-        <div className="flex gap-4">
+        <div className="container">
+          <div className='mb-0'>
           <BranchSelector
             selectedBranch={selectedBranch}
             setSelectedBranch={setSelectedBranch}
             branches={Object.keys(jsonData.Branches)}
           />
+          </div>
+          <div className='mt-0'>
           <SemesterSelector
             selectedSemester={selectedSemester}
             setSelectedSemester={setSelectedSemester}
             semesters={selectedBranch ? Object.keys(jsonData.Branches[selectedBranch].Semesters) : []}
             disabled={!selectedBranch}
           />
+          </div>
           <div className="flex-none flex items-end">
-            <button
+            <button 
               onClick={handleSubmit}
-              className={`bg-blue-500 text-white py-1 px-2 rounded shadow transition ${!selectedBranch || !selectedSemester ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-400'}`}
+              className={`bg-blue-500 text-white py-1 px-2 mx-4 rounded shadow transition ${!selectedBranch || !selectedSemester ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-400'}`}
               disabled={!selectedBranch || !selectedSemester}
             >
-              Submit
+               Submit
             </button>
           </div>
         </div>
@@ -177,6 +192,7 @@ const JsonNavigator = () => {
         {renderContent()}
       </div>
     </div>
+   
   );
 };
 
